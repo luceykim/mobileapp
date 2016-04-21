@@ -117,25 +117,6 @@ window.addEventListener("load", function() {
 
 		var textcontain, box, word;
 
-		// for (i=0; i < 3; i++) {
-		// 	textcontain = new createjs.Container();
-		// 	box = new createjs.Shape();
-		// 	box.graphics.f("#C0C0C0").dr(0,(i*100)+50,size,70);
-		// 	textcontain.addChild(box);
-		// 	contain.addChild(textcontain);
-		//
-		// 	textcontain.x = stageW/2 - size/2;
-		// 	textcontain.y = stageH/2 + 120;
-		//
-		// 	textcontain.word = colourName[i];
-		// 	word = new createjs.Text(textcontain.word, "40px Arial", "#FFFFFF");
-		// 	word.textAlign = "center";
-		// 	// word.textBaseline = "middle";
-		// 	textcontain.addChild(word);
-		// 	word.x = size/2;
-		// 	word.y = (i*100) + 65;
-		// }
-
 		textcontain = new createjs.Container();
 		box = new createjs.Shape();
 		textcontain.addChild(box);
@@ -146,18 +127,18 @@ window.addEventListener("load", function() {
 
 		function arrangeWords() {
 			for (i=0; i < 3; i++) {
-				box.graphics.f("#C0C0C0").dr(0,(i*100)+50,size,70);
+				box.graphics.f("#C0C0C0").dr(0,(i*150)+50,size,100);
 
 				textcontain.x = stageW/size-1;
 				textcontain.y = stageH/size;
 
 				textcontain.word = colourName[i];
-				word = new createjs.Text(textcontain.word, "30px Arial", "#FFFFFF");
+				word = new createjs.Text(textcontain.word, "60px Arial", "#FFFFFF");
 				word.textAlign = "center";
 				// word.textBaseline = "middle";
 				textcontain.addChild(word);
 				word.x = size/2;
-				word.y = (i*100) + 65;
+				word.y = (i*150) + 65;
 			}
 		}
 
