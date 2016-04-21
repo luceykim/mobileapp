@@ -7,47 +7,153 @@
 <!-- for CreateJS and ZIMjs http://zimjs.com - free to modify - Dan Zen 2015 -->
 <!-- see http://zimjs.com/templates for more templates and meta tags -->
 
-<script type="text/javascript" src="cordova.js"></script>
+<!-- <script type="text/javascript" src="cordova.js"></script> -->
 <script>var zon = true; // true for comments from zim code</script>
 <script type="text/javascript" src="js/zim_2.4.js"></script><!-- add _doc to see code -->
 <script type="text/javascript" src="js/createjs-2015.05.21.min.js"></script>
 <!-- or can go to zimjs.com and createjs.com for individual modules -->
 
 <style>
-	body {margin:0px; padding:0px; background-color:#DCDCDC;}
-	#myCanvas {position:absolute; background-color:#FFF;}
+	body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
+	#myCanvas {position:absolute; left:0px; top:0px; background-color:#EEE;}
 </style>
 
 <script>
 
-// SCALING OPTIONS
-// "none"		sets canvas and stage to dimensions and does not scale if window changes
-// "fit"		sets canvas and stage to dimensions and scales to fit inside window size
-// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
-// "full"		sets canvas and stage to window size (canvas is actually set to screen size)
+window.addEventListener("load", function() {
 
-var scaling = "fit"; // fit scales to fit the browser window while keeping the aspect ratio
-var width = 640;
-var height = 960;
-var frame = new zim.Frame(scaling, width, height);
-frame.on("ready", function() {
-	zog("ready from ZIM Frame");
 
-	var stage = frame.stage;
-	var stageW = frame.width;
-	var stageH = frame.height;
+	console.log("hello");
 
-	// put your code here (you can delete this code)
+	var stageW;
+	var stageH;
+	var ready = false;
+	var resize;
 
-    var c = new zim.Circle(100, "powderblue");
-    stage.addChild(c);
-    zim.centerReg(c, stage);
+	makeCanvas();
 
-    zim.drag(c);
+	// put app code here
 
-	stage.update();
+	// handle asset loading and call main app function when complete
 
-}); // end of ready
+	var stage = new createjs.Stage("myCanvas");
+	stage.enableMouseOver(10);  // leave out if mobile
+	createjs.Touch.enable(stage, true);
+	sizeStage();
+	console.log(stageW, stageH);
+
+    app();
+
+	function app() {
+
+        var size = 50;
+
+		var square = new createjs.Shape();
+		stage.addChild(square);
+
+        blacksq();
+
+        function blacksq() {
+            square.graphics.f("black").dr(0,0,size,size);
+
+            square.x = stageW/2 - size/2;
+            square.y = stageH/2 - size/2;
+
+            // square.setBounds(0,0,size,size);
+
+            square.cursor = "pointer";
+
+        }
+
+		resize = function() {
+            blacksq();
+
+			stage.update();
+		}
+
+		stage.update();
+		ready = true;
+		// end of the app code
+	}
+
+	// template
+	function makeCanvas() {
+		// make a canvas tag and apply attributes for id, width and height
+		var canvas = document.createElement("canvas");
+		canvas.setAttribute("id", "myCanvas");
+
+		// get maximum size for canvas
+		// note: iOS6 does not work from loading icon unless keep canvas within device size
+		// thank you apple for this and many other days of hell
+		var largest = Math.max(window.innerWidth, screen.width, window.innerHeight, screen.height);
+		if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
+
+		if (/firefox/i.test(navigator.userAgent)){
+		  console.log("yay");
+		}else{
+		console.log("not firefox")
+		}
+
+		// console.log(navigator.userAgent);
+
+		canvas.setAttribute("width", largest);
+		canvas.setAttribute("height", largest);
+
+		// add our canvas tag
+		document.body.appendChild(canvas);
+
+		// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
+		// and stop scrollwheel from moving page
+		var a = function(e) {
+			if (!e) e = event;
+			// console.log(e.keyCode);
+			if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
+		}
+
+		var b = function(e) {
+			if (!e) e = event;
+			e.preventDefault();
+		}
+
+		var c = b;
+
+		window.addEventListener("keydown", a);
+		window.addEventListener("mousewheel", b);
+		window.addEventListener("DOMMouseScroll", c);
+
+		window.addEventListener('resize', function() {
+			sizeStage();
+			if (/android|nexus/i.test(navigator.userAgent)) {
+				setTimeout(function() {
+					sizeStage();
+				}, 500); // to catch delayed screen sizes
+			}
+		});
+	}
+
+	function sizeStage() {
+		// earlier than IE9 does not have innerWidth
+		// inner is better on mobile when zoomed so can't always use client
+		// ternary operator
+		stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+		stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
+
+		console.log(stageW, stageH);
+
+		if (stage) stage.setBounds(0,0,stageW,stageH);
+
+		if (stageW > stageH) {
+			console.log("landscape");
+		} else if (stageW < stageH) {
+			console.log("portrait");
+		};
+
+		if (ready) resize();
+
+		// resize();
+	}
+});
+
 </script>
 </head>
 
