@@ -2,106 +2,306 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Guess the Colour</title>
+<title>Guess the Colour Name</title>
 
 <!-- for CreateJS and ZIMjs http://zimjs.com - free to modify - Dan Zen 2015 -->
 <!-- see http://zimjs.com/templates for more templates and meta tags -->
 
 <!-- <script type="text/javascript" src="cordova.js"></script> -->
 <script>var zon = true; // true for comments from zim code</script>
-<script type="text/javascript" src="js/zim_2.4.js"></script><!-- add _doc to see code -->
+<!-- <script type="text/javascript" src="js/zim_2.4.js"></script> -->
+<!-- add _doc to see code -->
 <script type="text/javascript" src="js/createjs-2015.05.21.min.js"></script>
+<!-- <script src="js/createjs-2015.11.26.min.js"></script> -->
+
 <script src="js/im.js"></script>
 
 <!-- or can go to zimjs.com and createjs.com for individual modules -->
 
 <style>
-	body {margin:0px; padding:0px; background-color:#DCDCDC;}
-	#myCanvas {position:absolute; background-color:#FFF;}
+	body {margin:0px; padding:0px; background-color:#000; overflow:hidden;}
+	#myCanvas {position:absolute; left:0px; top:0px; background-color:#EEE;}
 </style>
 
 <script>
 
-// SCALING OPTIONS
-// "none"		sets canvas and stage to dimensions and does not scale if window changes
-// "fit"		sets canvas and stage to dimensions and scales to fit inside window size
-// "outside"	sets canvas and stage to dimensions and scales to fit outside window size
-// "full"		sets canvas and stage to window size (canvas is actually set to screen size)
-
-var scaling = "fit"; // fit scales to fit the browser window while keeping the aspect ratio
-var width = 640;
-var height = 960;
-var frame = new zim.Frame(scaling, width, height);
-frame.on("ready", function() {
-	zog("ready from ZIM Frame");
-
-	var stage = frame.stage;
-	var stageW = frame.width;
-	var stageH = frame.height;
-
-	// put your code here (you can delete this code)
-
-	var size = 600;
-	var colours = ["firebrick", "thistle", "papayawhip"];
-	var colourName = ["Firebrick", "Thistle", "Papayawhip"];
+window.addEventListener("load", function() {
 
 
-	var contain = new createjs.Container();
-	stage.addChild(contain);
+	console.log("hello");
 
-	im.shuffle(colours);
+	var stageW;
+	var stageH;
+	var ready = false;
+	var resize;
+	var orientation;
 
-	var colour, square;
+	makeCanvas();
 
-	for (var i=0; i<colours.length; i++){
-		colour = colours[i];
-		console.log(colours[i]);
-	}
+	// put app code here
 
-		// colour = new createjs.Container();
+	// handle asset loading and call main app function when complete
+
+	var stage = new createjs.Stage("myCanvas");
+	stage.enableMouseOver(10);  // leave out if mobile
+	createjs.Touch.enable(stage, true);
+	sizeStage();
+	console.log(stageW, stageH);
+
+    app();
+
+	function app() {
+
+        var size = 800;
+
+		var colours = ["firebrick", "thistle", "papayawhip"];
+		var colourName = ["Firebrick", "Thistle", "Papayawhip"];
+
+		var contain = new createjs.Container();
+		stage.addChild(contain);
+
+		im.shuffle(colours);
+
+		var colour, square;
+
 		square = new createjs.Shape();
-		// square.colours = colours[i];
-		square.graphics.f(colour).dr(0,0,size,size);
-		// console.log(square.colours);
-
 		contain.addChild(square);
-		// contain.addChild(colour);
-		// console.log("")
-
-		square.x = stageW/2 - size/2;
-		square.y = stageH/2 - 460;
-
-		// colour.square = colours[i];
 
 
+		colourShuffle();
 
-	im.shuffle(colourName, colours);
+		function colourShuffle() {
+			for (var i=0; i<colours.length; i++){
+				colour = colours[i];
+				console.log(colours[i]);
+			}
 
-	var textcontain, box, word;
+			square.graphics.f(colour).dr(0,0,size,size);
 
-	for (i=0; i < 3; i++) {
+			// square.x = stageW;
+			// square.y = stageH;
+			//
+		}
+
+		sizeColour();
+
+		function sizeColour() {
+			// var w = square.getBounds().width;
+			// var h = square.getBounds().height;
+				if (orientation == "vertical") {
+					var scaleW = stageW/size;
+					var boundH = stageH;
+					var scaleH = boundH/size;
+				} else {
+					var boundW = stageW;
+					var scaleW = boundW/size;
+					var scaleH = stageH/size;
+				}
+					var scale = Math.min(scaleW, scaleH)*.9;
+			square.scaleX = square.scaleY = scale;
+						// center square in region
+				if (orientation == "vertical") {
+					square.x = (stageW - size*scale)/2;
+					square.y = (boundH - size*scale)/2;
+				} else {
+					square.x = (boundW - size*scale)/2;
+					square.y = (stageH - size*scale)/2;
+				}
+
+			stage.update();
+
+		}
+
+
+		im.shuffle(colourName);
+
+		var textcontain, box, word;
+
+		// for (i=0; i < 3; i++) {
+		// 	textcontain = new createjs.Container();
+		// 	box = new createjs.Shape();
+		// 	box.graphics.f("#C0C0C0").dr(0,(i*100)+50,size,70);
+		// 	textcontain.addChild(box);
+		// 	contain.addChild(textcontain);
+		//
+		// 	textcontain.x = stageW/2 - size/2;
+		// 	textcontain.y = stageH/2 + 120;
+		//
+		// 	textcontain.word = colourName[i];
+		// 	word = new createjs.Text(textcontain.word, "40px Arial", "#FFFFFF");
+		// 	word.textAlign = "center";
+		// 	// word.textBaseline = "middle";
+		// 	textcontain.addChild(word);
+		// 	word.x = size/2;
+		// 	word.y = (i*100) + 65;
+		// }
+
 		textcontain = new createjs.Container();
 		box = new createjs.Shape();
-		box.graphics.f("#C0C0C0").dr(0,(i*100)+50,size,70);
 		textcontain.addChild(box);
 		contain.addChild(textcontain);
 
-		textcontain.x = stageW/2 - size/2;
-		textcontain.y = stageH/2 + 120;
 
-		textcontain.word = colourName[i];
-		word = new createjs.Text(textcontain.word, "40px Arial", "#FFFFFF");
-		word.textAlign = "center";
-		// word.textBaseline = "middle";
-		textcontain.addChild(word);
-		word.x = size/2;
-		word.y = (i*100) + 65;
+		arrangeWords();
+
+		function arrangeWords() {
+			for (i=0; i < 3; i++) {
+				box.graphics.f("#C0C0C0").dr(0,(i*100)+50,size,70);
+
+				textcontain.x = stageW/size-1;
+				textcontain.y = stageH/size;
+
+				textcontain.word = colourName[i];
+				word = new createjs.Text(textcontain.word, "30px Arial", "#FFFFFF");
+				word.textAlign = "center";
+				// word.textBaseline = "middle";
+				textcontain.addChild(word);
+				word.x = size/2;
+				word.y = (i*100) + 65;
+			}
+		}
+
+		sizeWords();
+
+		function sizeWords() {
+			if (orientation == "vertical") {
+				var scaleW = stageW/size;
+				var boundH = stageH;
+				var scaleH = boundH/size;
+			} else {
+				var boundW = stageW;
+				var scaleW = boundW/size;
+				var scaleH = stageH/size;
+			}
+				var scale = Math.min(scaleW, scaleH)*.9;
+		textcontain.scaleX = textcontain.scaleY = scale;
+					// center textcontain in region
+			if (orientation == "vertical") {
+				textcontain.x = (stageW - size*scale)/2;
+				textcontain.y = (boundH - size*scale);
+			} else {
+				textcontain.x = (boundW - size*scale)/2;
+				textcontain.y = (stageH - size*scale);
+			}
+
+		stage.update();
+		}
+        // sq();
+
+		// txt();
+		//
+        // function sq() {
+        //     square.graphics.f("firebrick").dr(0,0,size,size);
+		//
+        //     square.x = stageW/2 - size/2;
+        //     square.y = stageH/3 - size/2;
+		//
+        //     // square.setBounds(0,0,size,size);
+		//
+        //     square.cursor = "pointer";
+		//
+        // }
+		//
+		// function txt() {
+		// 	text.x = stageW/2;
+		// 	text.y = stageH - size/2;
+		// 	text.textAlign = "center";
+		// 	text.textBaseline = "middle";
+		// }
+
+		resize = function() {
+
+			colourShuffle();
+			sizeColour();
+			arrangeWords();
+			sizeWords();
+
+			stage.update();
+		}
+
+		stage.update();
+		ready = true;
+		// end of the app code
 	}
 
+	// template
+	function makeCanvas() {
+		// make a canvas tag and apply attributes for id, width and height
+		var canvas = document.createElement("canvas");
+		canvas.setAttribute("id", "myCanvas");
 
-	stage.update();
+		// get maximum size for canvas
+		// note: iOS6 does not work from loading icon unless keep canvas within device size
+		// thank you apple for this and many other days of hell
+		var largest = Math.max(window.innerWidth, screen.width, window.innerHeight, screen.height);
+		if (!/ip(hone|od|ad)/i.test(navigator.userAgent)) largest *= 3; // handle up to three monitors
 
-}); // end of ready
+		if (/firefox/i.test(navigator.userAgent)){
+		  console.log("yay");
+		}else{
+		console.log("not firefox")
+		}
+
+		// console.log(navigator.userAgent);
+
+		canvas.setAttribute("width", largest);
+		canvas.setAttribute("height", largest);
+
+		// add our canvas tag
+		document.body.appendChild(canvas);
+
+		// stop the canvas from moving when certain keys are pressed (pgdwn, pgup, arrows, home, end)
+		// and stop scrollwheel from moving page
+		var a = function(e) {
+			if (!e) e = event;
+			// console.log(e.keyCode);
+			if (e.keyCode && (e.keyCode >= 32 && e.keyCode <= 40)) e.preventDefault();
+		}
+
+		var b = function(e) {
+			if (!e) e = event;
+			e.preventDefault();
+		}
+
+		var c = b;
+
+		window.addEventListener("keydown", a);
+		window.addEventListener("mousewheel", b);
+		window.addEventListener("DOMMouseScroll", c);
+
+		window.addEventListener('resize', function() {
+			sizeStage();
+			if (/android|nexus/i.test(navigator.userAgent)) {
+				setTimeout(function() {
+					sizeStage();
+				}, 500); // to catch delayed screen sizes
+			}
+		});
+	}
+
+	function sizeStage() {
+		// earlier than IE9 does not have innerWidth
+		// inner is better on mobile when zoomed so can't always use client
+		// ternary operator
+		stageW = isNaN(window.innerWidth) ? window.clientWidth : window.innerWidth;
+		stageH = isNaN(window.innerHeight) ? window.clientHeight : window.innerHeight;
+
+		console.log(stageW, stageH);
+
+		if (stage) stage.setBounds(0,0,stageW,stageH);
+
+		if (stageW > stageH) {
+			console.log("landscape");
+		} else if (stageW < stageH) {
+			console.log("portrait");
+		};
+
+		if (ready) resize();
+
+		// resize();
+	}
+});
+
 </script>
 </head>
 
