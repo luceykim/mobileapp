@@ -6,14 +6,14 @@
         id        = "com.sheridan.imm.collective"
         version   = "1.0.0">
 
-    <name>Mobile Basic</name>
+    <name>That Colour Name</name>
 
     <description>
-        It's a blue circle.
+        Guess the Colour Name
     </description>
 
-    <author href="http://danzen.com" email="door@danzen.com">
-        PhoneGap Team
+    <author href="http://luceykim.com" email="luceykimm@gmail.com">
+        Lucey Kim
     </author>
 
     <!--

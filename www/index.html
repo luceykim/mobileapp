@@ -38,6 +38,8 @@ window.addEventListener("load", function() {
 	var cols = 1;
 	var rows = 3;
 	var total = cols*rows;
+	var startCount = 10;
+	var count = startCount;
 
     app();
 
@@ -59,10 +61,6 @@ window.addEventListener("load", function() {
 
 		var height, spacing, colour, square, option;
 
-		// square = new createjs.Shape();
-		// contain.addChild(square);
-
-
 		colourShuffle();
 
 		function colourShuffle() {
@@ -71,7 +69,7 @@ window.addEventListener("load", function() {
 
 			for (var i=0; i<colours.length; i++){
 				colour = colours[i];
-				console.log(colours[i]);
+				// console.log(colours[2]);
 			}
 
 			var sizeW = stageW*.7;
@@ -80,18 +78,6 @@ window.addEventListener("load", function() {
 			square = new createjs.Shape();
 			square.graphics.f(colour).dr(0,0,stageW,stageH);
 			contain.addChild(square);
-
-			// square.x = stageW*.15;
-			// square.y = stageH*.15;
-
-			// var colourful = colourName[0];
-
-			// height = stageH*.9;
-			// spacing = stageH*.009;
-			// optionW = stageW*7.9;
-			// optionH = stageW*.35;
-			// var spacing = stageW*.007;
-			// var size = (stageW*.8-spacing*(cols-1))/cols;
 
 			select.removeAllChildren();
 
@@ -120,7 +106,16 @@ window.addEventListener("load", function() {
 			select.cursor = "pointer";
 			select.on("click", function(e) {
 				console.log(e.target.words);
-			})
+				if (e.target.words) {
+					alert("wooh")
+				};
+					// im.shuffle(colourN);
+
+
+
+				// stage.update();
+
+			});
 
 		}
 
