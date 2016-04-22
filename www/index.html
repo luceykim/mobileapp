@@ -38,7 +38,7 @@ window.addEventListener("load", function() {
 	var cols = 1;
 	var rows = 3;
 	var total = cols*rows;
-	var startCount = 10;
+	var startCount = 0;
 	var count = startCount;
 
     app();
@@ -50,11 +50,15 @@ window.addEventListener("load", function() {
 		var colours = ["firebrick", "thistle", "papayawhip"];
 		var colourName = ["Firebrick", "Thistle", "Papayawhip"];
 
+
 		var contain = new createjs.Container();
 		stage.addChild(contain);
 
 		var select = new createjs.Container();
 		stage.addChild(select);
+
+		var clicking = new createjs.Container();
+		stage.addChild(clicking);
 
 		im.shuffle(colours);
 		im.shuffle(colourName);
@@ -103,17 +107,37 @@ window.addEventListener("load", function() {
 				colourN.y = (stageH*.1)/2;
 			}
 
+			clicking.removeAllChildren();
+
+			var counter = new createjs.Text(startCount, sizeW*.1+"px arial", "#BCBCBC");
+			counter.textAlign = "center";
+			counter.textBaseline = "middle";
+			clicking.addChild(counter);
+			counter.x = (sizeW/2)*1.4;
+			counter.y = (stageH/2)+220;
+
+
 			select.cursor = "pointer";
 			select.on("click", function(e) {
 				console.log(e.target.words);
-				if (e.target.words) {
-					alert("wooh")
-				};
-					// im.shuffle(colourN);
+				if (e.target.words==="Thistle") {
+					counter.text = ++count;
+				} else {
+					counter.text -=count;
+					location.reload();
+				} if (e.target.words==="Firebrick") {
+					counter.text = ++count;
+				} else {
+					counter.text -=count;
+				} if (e.target.words==="Papayawhip") {
+					counter.text = ++count;
+					location.reload();
+				}
 
 
 
-				// stage.update();
+
+			 	stage.update();
 
 			});
 
